@@ -63,7 +63,7 @@
     // Function to fetch and update crypto prices for the top 50 coins
     function updateCryptoPrices() {
         $.ajax({
-            url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&x_cg_demo_api_key=CG-VJcGVcvhsNYe3wVkd24vQdvV',
+            url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&x_cg_demo_api_key=YOUR_API-KEY',
             method: 'GET',
             dataType: 'json',
             success: function(data) {
