@@ -1,0 +1,96 @@
+<style>
+    /* Styling for the list */
+    .crypto-price-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* Styling for list items */
+    .crypto-price-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 18px;
+        border-bottom: 1px solid #ddd; /* Separator line */
+        padding-bottom: 10px; /* Spacing below each item */
+    }
+
+    .crypto-price-item:first-child {
+        border-top: 1px solid #ddd; /* Separator line above the first coin */
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+
+    .crypto-price-item:last-child {
+        border-bottom: none; /* Remove separator from the last item */
+    }
+
+    .crypto-label {
+        font-weight: bold;
+    }
+    
+    /* Styling for headers */
+    .crypto-header {
+        display: flex;
+        justify-content: space-between;
+        font-weight: bold;
+    }
+
+    .crypto-header-item {
+        flex-basis: 30%; /* Adjust the width as needed */
+    }
+
+    /* Styling for separators */
+    .crypto-separator {
+        border-top: 1px solid #ddd;
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+</style>
+
+<ul class="crypto-price-list">
+    <li class="crypto-separator"></li>
+    <li class="crypto-header">
+        <span class="crypto-header-item">#</span>
+        <span class="crypto-header-item">Coin</span>
+        <span class="crypto-header-item">Price</span>
+    </li>
+</ul>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // Function to fetch and update crypto prices for the top 50 coins
+    function updateCryptoPrices() {
+        $.ajax({
+            url: 'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&x_cg_demo_api_key=CG-VJcGVcvhsNYe3wVkd24vQdvV',
+            method: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                // Clear the existing list items
+                $('.crypto-price-list li:not(:first-child)').remove();
+
+                // Generate list items for each coin
+                data.forEach(function(coin, index) {
+                    const listItem = `
+                        <li class="crypto-price-item">
+                            <span class="crypto-header-item">${index + 1}</span>
+                            <span class="crypto-header-item">${coin.name} (${coin.symbol.toUpperCase()}):</span>
+                            <span class="crypto-header-item crypto-price" id="${coin.symbol}-price">$${coin.current_price.toFixed(2)}</span>
+                        </li>
+                    `;
+                    $('.crypto-price-list').append(listItem);
+                });
+            },
+            error: function(error) {
+                console.error('Error fetching crypto prices:', error);
+            }
+        });
+    }
+
+    // Update crypto prices on page load
+    updateCryptoPrices();
+
+    // Set up a timer to update crypto prices every hour (3,600,000 milliseconds)
+    setInterval(updateCryptoPrices, 3600000); // 1 hour
+</script>
